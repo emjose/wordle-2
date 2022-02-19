@@ -1,0 +1,882 @@
+/* ---------------------- */
+/* Global Styles & Colors */
+/* ---------------------- */
+
+:root {
+	--green: #6aaa64;
+	--darkendGreen: #538d4e;
+	--yellow: #c9b458;
+	--darkendYellow: #b59f3b;
+	--lightGray: #d8d8d8;
+	--gray: #86888a;
+	--darkGray: #939598;
+	--white: #fff;
+	--black: #212121;
+	/* Colorblind colors */
+	--orange: #f5793a;
+	--blue: #85c0f9;
+	font-family: "Clear Sans", "Helvetica Neue", Arial, sans-serif;
+	font-size: 16px;
+	--header-height: 50px;
+	--keyboard-height: 200px;
+	--game-max-width: 500px;
+}
+
+/* ------------------ */
+/* Light theme colors */
+/* ------------------ */
+
+:root {
+	--color-tone-1: #1a1a1b;
+	--color-tone-2: #787c7e;
+	--color-tone-3: #878a8c;
+	--color-tone-4: #d3d6da;
+	--color-tone-5: #edeff1;
+	--color-tone-6: #f6f7f8;
+	--color-tone-7: #ffffff;
+	--opacity-50: rgba(255, 255, 255, 0.5);
+}
+
+/* ----------------- */
+/* Dark Theme Colors */
+/* ----------------- */
+
+.nightmode {
+	--color-tone-1: #f5f5f5;
+	--color-tone-2: #818384;
+	--color-tone-3: #565758;
+	--color-tone-4: #3a3a3c;
+	--color-tone-5: #272729;
+	--color-tone-6: #1a1a1b;
+	--color-tone-7: #121213;
+	--opacity-50: rgba(0, 0, 0, 0.5);
+}
+
+/* -------------------------------- */
+/* Constant colors and theme colors */
+/* -------------------------------- */
+
+:root,
+.nightmode {
+	--color-background: var(--color-tone-7);
+}
+
+:root {
+	--color-present: var(--yellow);
+	--color-correct: var(--green);
+	--color-absent: var(--color-tone-2);
+	--tile-text-color: var(--color-tone-7);
+	--key-text-color: var(--color-tone-1);
+	--key-evaluated-text-color: var(--color-tone-7);
+	--key-bg: var(--color-tone-4);
+	--key-bg-present: var(--color-present);
+	--key-bg-correct: var(--color-correct);
+	--key-bg-absent: var(--color-absent);
+	--modal-content-bg: var(--color-tone-7);
+}
+
+.nightmode {
+	--color-present: var(--darkendYellow);
+	--color-correct: var(--darkendGreen);
+	--color-absent: var(--color-tone-4);
+	--tile-text-color: var(--color-tone-1);
+	--key-text-color: var(--color-tone-1);
+	--key-evaluated-text-color: var(--color-tone-1);
+	--key-bg: var(--color-tone-2);
+	--key-bg-present: var(--color-present);
+	--key-bg-correct: var(--color-correct);
+	--key-bg-absent: var(--color-absent);
+	--modal-content-bg: var(--color-tone-7);
+}
+
+.colorblind {
+	--color-correct: var(--orange);
+	--color-present: var(--blue);
+	--tile-text-color: var(--white);
+	--key-bg-present: var(--color-present);
+	--key-bg-correct: var(--color-correct);
+	--key-bg-absent: var(--color-absent);
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	height: 100%;
+	background-color: var(--color-background);
+	margin: 0;
+	padding: 0;
+	overflow-y: hidden;
+}
+
+@media (max-width: 600px) {
+	.github-corner {
+		display: none;
+	}
+}
+
+/* ------------------------------------------- */
+/* See JS Lines ~217: Starting Game Grid Tiles */
+/* ------------------------------------------- */
+
+.tile {
+	width: 100%;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 2rem;
+	line-height: 2rem;
+	font-weight: bold;
+	vertical-align: middle;
+	box-sizing: border-box;
+	color: var(--tile-text-color);
+	text-transform: uppercase;
+	user-select: none;
+}
+
+.tile::before {
+	content: "";
+	display: inline-block;
+	padding-bottom: 100%;
+}
+
+@media (max-height: 600px) {
+	.tile {
+		font-size: 1em;
+		line-height: 1em;
+	}
+}
+
+.tile[data-state="empty"] {
+	border: 2px solid var(--color-tone-4);
+}
+
+.tile[data-state="tbd"] {
+	background-color: var(--color-tone-7);
+	border: 2px solid var(--color-tone-3);
+	color: var(--color-tone-1);
+}
+
+.tile[data-state="correct"] {
+	background-color: var(--color-correct);
+}
+
+.tile[data-state="present"] {
+	background-color: var(--color-present);
+}
+
+.tile[data-state="absent"] {
+	background-color: var(--color-absent);
+}
+
+.tile[data-animation="pop"] {
+	animation-name: PopIn;
+	animation-duration: 100ms;
+}
+
+@keyframes PopIn {
+	from {
+		transform: scale(0.8);
+		opacity: 0;
+	}
+	40% {
+		transform: scale(1.1);
+		opacity: 1;
+	}
+}
+
+.tile[data-animation="flip-in"] {
+	animation-name: FlipIn;
+	animation-duration: 250ms;
+	animation-timing-function: ease-in;
+}
+
+@keyframes FlipIn {
+	0% {
+		transform: rotateX(0);
+	}
+	100% {
+		transform: rotateX(-90deg);
+	}
+}
+
+.tile[data-animation="flip-out"] {
+	animation-name: FlipOut;
+	animation-duration: 250ms;
+	animation-timing-function: ease-in;
+}
+
+@keyframes FlipOut {
+	0% {
+		transform: rotateX(-90deg);
+	}
+	100% {
+		transform: rotateX(0);
+	}
+}
+
+/* ---------------------------------------------- */
+/* See JS Lines ~329: Row tiles and win animation */
+/* ---------------------------------------------- */
+
+.row {
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	grid-gap: 5px;
+}
+
+.win {
+	animation-name: Bounce;
+	animation-duration: 1000ms;
+}
+
+@keyframes Bounce {
+	0%,
+	20% {
+		transform: translateY(0);
+	}
+	40% {
+		transform: translateY(-30px);
+	}
+	50% {
+		transform: translateY(5px);
+	}
+	60% {
+		transform: translateY(-15px);
+	}
+	80% {
+		transform: translateY(2px);
+	}
+	100% {
+		transform: translateY(0);
+	}
+}
+
+@keyframes Shake {
+	10%,
+	90% {
+		transform: translateX(-1px);
+	}
+	20%,
+	80% {
+		transform: translateX(2px);
+	}
+	30%,
+	50%,
+	70% {
+		transform: translateX(-4px);
+	}
+	40%,
+	60% {
+		transform: translateX(4px);
+	}
+}
+
+/* ------------------------------------------------------------------ */
+/* See JS Lines ~1187: Settings Modal (hard, dark, color blind modes) */
+/* ------------------------------------------------------------------ */
+
+.setting {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	border-bottom: 1px solid var(--color-tone-4);
+	padding: 16px 0;
+}
+
+a,
+a:visited {
+	color: var(--color-tone-2);
+}
+
+a:hover {
+	color: var(--orange);
+}
+
+.setting-title {
+	font-size: 18px;
+}
+
+.text {
+	padding-right: 8px;
+}
+
+.description {
+	font-size: 14px;
+	color: var(--color-tone-2);
+}
+
+#footnote {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 16px;
+	color: var(--color-tone-2);
+	font-size: 13px;
+	text-align: right;
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+}
+
+#privacy-policy,
+#copyright {
+	text-align: left;
+	padding: 5px;
+}
+
+@media only screen and (min-device-width: 320px) and (max-device-width: 480px) {
+	.setting {
+		padding: 16px;
+	}
+}
+
+/* ---------------------------------------------- */
+/* See JS Lines ~1317: Toast window notifications */
+/* ---------------------------------------------- */
+
+.toast {
+	position: relative;
+	margin: 10px;
+	background-color: var(--color-tone-1);
+	color: var(--color-tone-7);
+	padding: 16px;
+	border: none;
+	border-radius: 4px;
+	opacity: 1;
+	transition: opacity 300ms cubic-bezier(0.645, 0.045, 0.355, 1);
+	font-weight: 700;
+	letter-spacing: 0.75px;
+}
+
+.win {
+	background-color: var(--color-correct);
+	color: var(--tile-text-color);
+}
+
+/* ------------------------------------------------- */
+/* See JS Lines ~1480: Header, title, and game board */
+/* ------------------------------------------------- */
+
+.toaster {
+	position: absolute;
+	top: 10%;
+	left: 50%;
+	transform: translate(-50%, 0);
+	pointer-events: none;
+	width: fit-content;
+}
+
+#game {
+	width: 100%;
+	max-width: var(--game-max-width);
+	margin: 0 auto;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	height: var(--header-height);
+	color: var(--color-tone-1);
+	border-bottom: 1px solid var(--color-tone-4);
+}
+
+.title {
+	font-family: jubilat, serif;
+	font-weight: 600;
+	font-style: normal;
+	font-size: 40px;
+	letter-spacing: 0.07rem;
+	text-align: center;
+	position: absolute;
+	left: 0;
+	right: 0;
+	pointer-events: none;
+}
+
+@media (max-width: 360px) {
+	header .title {
+		font-size: 22px;
+		letter-spacing: 0.05rem;
+	}
+}
+
+#board-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-grow: 1;
+	overflow: hidden;
+}
+
+#board {
+	display: grid;
+	grid-template-rows: repeat(6, 1fr);
+	grid-gap: 5px;
+	padding: 10px;
+	box-sizing: border-box;
+}
+
+button.icon {
+	background: none;
+	border: none;
+	cursor: pointer;
+	padding: 0 4px;
+}
+
+#debug-tools {
+	position: absolute;
+	bottom: 0;
+}
+
+/* ------------------------------------ */
+/* See JS Lines ~1927: Statistics modal */
+/* ------------------------------------ */
+
+.stats-content {
+	position: relative;
+	border-radius: 8px;
+	border: 1px solid var(--color-tone-6);
+	background-color: var(--modal-content-bg);
+	color: var(--color-tone-1);
+	box-shadow: 0 4px 23px 0 rgba(0, 0, 0, 0.2);
+	width: 90%;
+	max-height: 90%;
+	overflow-y: auto;
+	animation: SlideIn 200ms;
+	max-width: var(--game-max-width);
+	padding: 16px;
+	box-sizing: border-box;
+}
+.stats-content.closing {
+	animation: SlideOut 200ms;
+}
+.stats-close-icon {
+	width: 24px;
+	height: 24px;
+	position: absolute;
+	top: 16px;
+	right: 16px;
+}
+#stats-icon game-icon {
+	position: fixed;
+	user-select: none;
+	cursor: pointer;
+}
+@keyframes SlideIn {
+	0% {
+		transform: translateY(30px);
+		opacity: 0;
+	}
+	100% {
+		transform: translateY(0px);
+		opacity: 1;
+	}
+}
+@keyframes SlideOut {
+	0% {
+		transform: translateY(0px);
+		opacity: 1;
+	}
+	90% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(60px);
+	}
+}
+
+/* --------------------------------------- */
+/* See JS Lines ~2000: The bottom keyboard */
+/* --------------------------------------- */
+
+#keyboard {
+	margin: 0 8px;
+	user-select: none;
+}
+
+.keyboard-row {
+	display: flex;
+	width: 100%;
+	margin: 0 auto 8px;
+	touch-action: manipulation;
+}
+
+button#key-button {
+	font-family: inherit;
+	font-weight: bold;
+	font-size: 15px;
+	border: 0;
+	padding: 0;
+	margin: 0 6px 0 0;
+	height: 58px;
+	border-radius: 4px;
+	cursor: pointer;
+	user-select: none;
+	background-color: var(--key-bg);
+	color: var(--key-text-color);
+	flex: 1;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-transform: uppercase;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0.3);
+}
+
+button#key-button:hover,
+button#key-button:focus {
+	outline: none;
+	background-color: var(--orange);
+}
+
+button#key-button.fade {
+	transition: background-color 0.1s ease, color 0.1s ease;
+}
+
+button#key-button:last-of-type {
+	margin: 0;
+}
+
+.half {
+	flex: 0.5;
+}
+
+button#key-button.one {
+	flex: 1;
+}
+
+button#key-button.one-and-a-half {
+	flex: 1.5;
+	font-size: 14px;
+}
+
+button#key-button.two {
+	flex: 2;
+}
+
+button#key-button[data-state="correct"] {
+	background-color: var(--key-bg-correct);
+	color: var(--key-evaluated-text-color);
+}
+
+button#key-button[data-state="present"] {
+	background-color: var(--key-bg-present);
+	color: var(--key-evaluated-text-color);
+}
+
+button#key-button[data-state="absent"] {
+	background-color: var(--key-bg-absent);
+	color: var(--key-evaluated-text-color);
+}
+
+button#key-button[data-state="correct"]:focus,
+button#key-button[data-state="present"]:focus,
+button#key-button[data-state="absent"]:focus,
+button#key-button[data-state="correct"]:hover,
+button#key-button[data-state="present"]:hover,
+button#key-button[data-state="absent"]:hover {
+	background-color: var(--orange);
+}
+
+/* ------------------------------------------------- */
+/* See JS Lines ~2410: Statistics data and bar graph */
+/* ------------------------------------------------- */
+
+.stats-modal-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: 16px 0;
+}
+
+#stats-modal-title {
+	font-weight: 700;
+	font-size: 18px;
+	letter-spacing: 0.5px;
+	text-transform: uppercase;
+	text-align: center;
+	margin-bottom: 10px;
+	color: var(--color-correct);
+}
+
+#statistics {
+	display: flex;
+}
+
+.statistic-container {
+	flex: 1;
+}
+
+.statistic-container .statistic {
+	font-size: 36px;
+	font-weight: 400;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	letter-spacing: 0.05em;
+	font-variant-numeric: proportional-nums;
+}
+
+.statistic.timer {
+	font-variant-numeric: initial;
+}
+
+.statistic-container .label {
+	font-size: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+}
+
+#guess-distribution {
+	width: 80%;
+}
+
+.graph-container {
+	width: 100%;
+	height: 20px;
+	display: flex;
+	align-items: center;
+	padding-bottom: 4px;
+	font-size: 14px;
+	line-height: 20px;
+}
+
+.graph-container .graph {
+	width: 100%;
+	height: 100%;
+	padding-left: 4px;
+}
+
+.graph-container .graph .graph-bar {
+	height: 100%;
+	width: 0%;
+	position: relative;
+	background-color: var(--color-absent);
+	display: flex;
+	justify-content: center;
+}
+
+.graph-container .graph .graph-bar.align-right.highlight {
+	background-color: var(--color-correct);
+}
+
+.graph-container .graph .graph-bar.align-right {
+	justify-content: flex-end;
+	padding-right: 8px;
+	background-color: var(--color-absent);
+}
+
+.graph-container .graph .num-guesses {
+	font-weight: bold;
+	color: var(--tile-text-color);
+}
+
+#statistics,
+#guess-distribution {
+	padding-bottom: 10px;
+}
+
+.stats-footer {
+	display: flex;
+	width: 100%;
+	place-content: center;
+}
+
+.countdown {
+	border-right: 1px solid var(--color-tone-1);
+	padding-right: 12px;
+	width: 50%;
+}
+
+.share {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding-left: 12px;
+	width: 50%;
+	display: none;
+}
+
+.no-data {
+	text-align: center;
+}
+
+button#retry-button {
+	background-color: var(--key-bg-correct);
+	color: var(--key-evaluated-text-color);
+	font-family: inherit;
+	font-weight: bold;
+	letter-spacing: 0.5px;
+	border-radius: 4px;
+	cursor: pointer;
+	border: none;
+	user-select: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-transform: uppercase;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0.3);
+	width: 80%;
+	font-size: 20px;
+	height: 52px;
+	filter: brightness(100%);
+}
+
+button#retry-button:hover {
+	opacity: 0.9;
+}
+
+button#retry-button game-icon {
+	width: 24px;
+	height: 24px;
+	padding-left: 8px;
+}
+
+/* ------------------------------------------------ */
+/* See JS Lines ~2537: Settings modal: toggle knobs */
+/* ------------------------------------------------ */
+
+.toggle-container {
+	display: flex;
+	justify-content: space-between;
+}
+
+.switch {
+	height: 20px;
+	width: 32px;
+	background: var(--color-tone-3);
+	border-radius: 999px;
+	display: block;
+	position: relative;
+}
+
+.knob {
+	display: block;
+	position: absolute;
+	left: 2px;
+	top: 2px;
+	height: calc(100% - 4px);
+	width: 50%;
+	border-radius: 8px;
+	background: var(--white);
+	transform: translateX(0);
+	transition: transform 0.3s;
+}
+
+/* -------------------------------------------------- */
+/* See JS Lines ~2620: Game help / instructions modal */
+/* -------------------------------------------------- */
+
+.instructions {
+	font-size: 15px;
+	color: var(--color-tone-1);
+}
+
+#example-title {
+	font-size: 20px;
+}
+
+.examples {
+	font-size: 16px;
+	border-bottom: 1px solid var(--color-tone-4);
+	border-top: 1px solid var(--color-tone-4);
+}
+
+.example {
+	margin-top: 24px;
+	margin-bottom: 24px;
+}
+
+#play-footnote {
+	font-size: 18px;
+	font-weight: 500;
+}
+
+#play-footnote span {
+	font-size: 28px;
+	color: var(--color-tone-1);
+	font-family: jubilat, serif;
+	font-weight: 600;
+}
+
+game-tile#intro {
+	width: 46px;
+	height: 46px;
+}
+
+/* ------------------------------------------------------------------------------- */
+/* See JS Lines ~2700: Overlay for the header modals: "How to Play" and "Settings" */
+/* ------------------------------------------------------------------------------- */
+
+.content {
+	position: relative;
+	color: var(--color-tone-1);
+	padding: 0 32px;
+	max-width: var(--game-max-width);
+	width: 100%;
+	overflow-y: auto;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.overlay-content-container {
+	height: 100%;
+}
+
+.overlay.closing {
+	animation: SlideOut 150ms linear;
+}
+
+#overlay-header {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+}
+
+#overlay-header-title {
+	font-weight: 700;
+	font-size: 28px;
+	letter-spacing: 0.5px;
+	text-transform: uppercase;
+	text-align: center;
+	margin-bottom: 10px;
+	color: var(--color-correct);
+}
+
+@keyframes SlideIn {
+	0% {
+		transform: translateY(30px);
+		opacity: 0;
+	}
+	100% {
+		transform: translateY(0px);
+		opacity: 1;
+	}
+}
+
+@keyframes SlideOut {
+	0% {
+		transform: translateY(0px);
+		opacity: 1;
+	}
+	90% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(60px);
+	}
+}
